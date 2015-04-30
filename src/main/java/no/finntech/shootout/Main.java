@@ -37,6 +37,8 @@ import static org.apache.commons.compress.compressors.CompressorStreamFactory.GZ
 
 public final class Main {
     private static final Logger LOG = LogManager.getLogger(Main.class);
+    private static final int WARMUP_ITERATIONS = 10000;
+    private static final int TEST_ITERATIONS = 100000;
     private List<Case> cases = new LinkedList<>();
 
     public static void main(String[] args) throws IOException {
@@ -49,15 +51,31 @@ public final class Main {
         cases.add(new Thrift());
         Tracker.printHeader();
         for (Case c : cases) {
-            Tracker tracker = new Tracker(c.getName());
-            for (int i = 0; i < 10000; i++) {
-                c.init();
-                tracker.addWrite(time(c::write));
-                tracker.addSize(c.getSize());
-                tracker.addRead(time(c::read));
-            }
-            tracker.printReport();
+            caseWarmup(c);
+            caseTest(c);
         }
+    }
+
+    private void caseWarmup(Case c) {
+        Tracker tracker = new Tracker(c.getName());
+        for (int i = 0; i < WARMUP_ITERATIONS; i++) {
+            singleTest(c, tracker);
+        }
+    }
+
+    private void caseTest(Case c) {
+        Tracker tracker = new Tracker(c.getName());
+        for (int i = 0; i < TEST_ITERATIONS; i++) {
+            singleTest(c, tracker);
+        }
+        tracker.printReport();
+    }
+
+    private void singleTest(Case c, Tracker tracker) {
+        c.init();
+        tracker.addWrite(time(c::write));
+        tracker.addSize(c.getSize());
+        tracker.addRead(time(c::read));
     }
 
     private void addAvros() {
