@@ -1,0 +1,23 @@
+{"namespace": "no.finntech.shootout.avro",
+ "type": "record",
+ "name": "AvroPost",
+ "fields": [
+   {"name": "published", "type": "string"},
+   {"name": "actor", "type": {
+     "type": "record",
+     "name": "Person",
+     "fields": [
+       {"name": "id", "type": "string"},
+       {"name": "displayName", "type": "string"}
+     ]
+   }},
+   {"name": "object", "type": {
+     "type": "record",
+     "name": "Article",
+     "fields": [
+       {"name": "id", "type": "string"},
+       {"name": "displayName", "type": "string"}
+     ]
+   }}
+ ]
+}
