@@ -18,7 +18,8 @@ Most things should already be present, except:
 Adding a framework to test
 --------------------------
 
-Implement one or more `Case`s, and add them to the `cases` list in `Main`.
+Implement one or more `Case`s. Make sure to read the javadoc.
+
 When you are satisfied with your implementation, send a pull-request to get
 it added to the main.
 

@@ -20,7 +20,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 
-import no.finntech.shootout.AbstractCase;
+import no.finntech.shootout.Case;
 
 import org.apache.avro.io.DatumReader;
 import org.apache.avro.io.DatumWriter;
@@ -35,7 +35,7 @@ import org.openjdk.jmh.annotations.Setup;
 import org.openjdk.jmh.annotations.State;
 
 @State(Scope.Thread)
-public abstract class AvroBase extends AbstractCase {
+public abstract class AvroBase extends Case<AvroPost> {
     private AvroPost post;
     private byte[] bytes;
 
@@ -67,11 +67,13 @@ public abstract class AvroBase extends AbstractCase {
         return out;
     }
 
+    @Override
     @Benchmark
     public ByteArrayOutputStream write() throws IOException, CompressorException {
         return encode();
     }
 
+    @Override
     @Benchmark
     public AvroPost read() throws IOException, CompressorException {
         DatumReader<AvroPost> datumReader = new SpecificDatumReader<>(AvroPost.class);

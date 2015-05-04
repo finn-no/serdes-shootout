@@ -19,7 +19,7 @@ package no.finntech.shootout.thrift;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
-import no.finntech.shootout.AbstractCase;
+import no.finntech.shootout.Case;
 
 import org.apache.thrift.TDeserializer;
 import org.apache.thrift.TException;
@@ -30,7 +30,7 @@ import org.openjdk.jmh.annotations.Setup;
 import org.openjdk.jmh.annotations.State;
 
 @State(Scope.Thread)
-public class Thrift extends AbstractCase {
+public class Thrift extends Case<ThriftPost> {
     private ThriftPost post;
     private byte[] bytes;
 
@@ -52,6 +52,7 @@ public class Thrift extends AbstractCase {
         return bytes.length;
     }
 
+    @Override
     @Benchmark
     public ByteArrayOutputStream write() throws TException, IOException, InterruptedException {
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
@@ -59,6 +60,7 @@ public class Thrift extends AbstractCase {
         return outputStream;
     }
 
+    @Override
     @Benchmark
     public ThriftPost read() throws TException, InterruptedException {
         ThriftPost base = new ThriftPost();

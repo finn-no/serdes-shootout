@@ -51,7 +51,7 @@ public final class Main {
         LOG.info("Starting run...");
         Collection<RunResult> results = runner.run();
         Map<String, String> denseNames = getDenseNames(results);
-        Map<String, Integer> sizes = AbstractCase.getSizes();
+        Map<String, Integer> sizes = Case.getSizes();
         SortedSet<String> output = new TreeSet<>();
         for (RunResult result : results) {
             BenchmarkParams params = result.getParams();
