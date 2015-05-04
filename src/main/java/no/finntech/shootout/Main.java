@@ -17,93 +17,80 @@
 package no.finntech.shootout;
 
 import java.io.IOException;
-import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
-import java.util.Arrays;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.Collection;
+import java.util.Map;
+import java.util.SortedSet;
+import java.util.TreeSet;
 import java.util.concurrent.TimeUnit;
 
-import no.finntech.shootout.avro.BinaryAvro;
-import no.finntech.shootout.avro.JsonAvro;
-import no.finntech.shootout.thrift.Thrift;
-
-import com.google.common.base.Stopwatch;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.openjdk.jmh.annotations.Mode;
+import org.openjdk.jmh.infra.BenchmarkParams;
+import org.openjdk.jmh.results.Result;
+import org.openjdk.jmh.results.RunResult;
+import org.openjdk.jmh.runner.Runner;
+import org.openjdk.jmh.runner.RunnerException;
+import org.openjdk.jmh.runner.options.OptionsBuilder;
+import org.openjdk.jmh.runner.options.VerboseMode;
+import org.openjdk.jmh.util.ClassUtils;
 
-import static org.apache.commons.compress.compressors.CompressorStreamFactory.DEFLATE;
-import static org.apache.commons.compress.compressors.CompressorStreamFactory.GZIP;
+import static java.util.stream.Collectors.toSet;
 
 public final class Main {
     private static final Logger LOG = LogManager.getLogger(Main.class);
-    private static final int WARMUP_ITERATIONS = 10000;
-    private static final int TEST_ITERATIONS = 100000;
-    private List<Case> cases = new LinkedList<>();
 
-    public static void main(String[] args) throws IOException {
-        Main app = new Main();
-        app.run();
-    }
-
-    private void run() {
-        addAvros();
-        cases.add(new Thrift());
-        Tracker.printHeader();
-        for (Case c : cases) {
-            caseWarmup(c);
-            caseTest(c);
-        }
-    }
-
-    private void caseWarmup(Case c) {
-        Tracker tracker = new Tracker(c.getName());
-        for (int i = 0; i < WARMUP_ITERATIONS; i++) {
-            singleTest(c, tracker);
-        }
-    }
-
-    private void caseTest(Case c) {
-        Tracker tracker = new Tracker(c.getName());
-        for (int i = 0; i < TEST_ITERATIONS; i++) {
-            singleTest(c, tracker);
-        }
-        tracker.printReport();
-    }
-
-    private void singleTest(Case c, Tracker tracker) {
-        c.init();
-        tracker.addWrite(time(c::write));
-        tracker.addSize(c.getSize());
-        tracker.addRead(time(c::read));
-    }
-
-    private void addAvros() {
-        try {
-            for (Class<? extends AbstractCase> clz : Arrays.asList(BinaryAvro.class, JsonAvro.class)) {
-                cases.add(clz.newInstance());
-                for (String compressor : Arrays.asList(DEFLATE, GZIP)) {
-                    Constructor<?>[] constructors = clz.getConstructors();
-                    for (Constructor<?> constructor : constructors) {
-                        if (constructor.getParameterCount() == 1) {
-                            cases.add((Case) constructor.newInstance(compressor));
-                        }
-                    }
-                }
+    public static void main(String[] args) throws IOException, RunnerException {
+        Runner runner = new Runner(new OptionsBuilder()
+                .mode(Mode.AverageTime)
+                .timeUnit(TimeUnit.MICROSECONDS)
+                .warmupIterations(0)
+                .measurementIterations(1)
+                .verbosity(VerboseMode.SILENT)
+                .build());
+        LOG.info("Starting run...");
+        Collection<RunResult> results = runner.run();
+        Map<String, String> denseNames = getDenseNames(results);
+        Map<String, Integer> sizes = AbstractCase.getSizes();
+        SortedSet<String> output = new TreeSet<>();
+        for (RunResult result : results) {
+            BenchmarkParams params = result.getParams();
+            String benchmark = params.getBenchmark();
+            if (benchmark.contains(".sizer")) {
+                output.add(buildBenchmarkHeader(denseNames.get(benchmark), sizes.get(benchmark)));
+            } else {
+                output.add(buildBenchmarkResult(result.getPrimaryResult(), denseNames.get(benchmark)));
             }
-        } catch (InstantiationException | IllegalAccessException | InvocationTargetException e) {
-            LOG.error(e);
         }
+        for (String line : output) {
+            System.out.println(line);
+        }
+        LOG.info("Run completed");
     }
 
-    private long time(TimeTarget t) {
-        Stopwatch stopwatch = Stopwatch.createStarted();
-        t.run();
-        stopwatch.stop();
-        return stopwatch.elapsed(TimeUnit.MICROSECONDS);
+    private static String buildBenchmarkResult(Result primaryResult, String denseName) {
+        return String.format("%-30s score: %10.2f %s",
+                denseName,
+                primaryResult.getScore(),
+                primaryResult.getScoreUnit()
+        );
     }
 
-    private interface TimeTarget {
-        void run();
+    private static String buildBenchmarkHeader(String denseName, Integer size) {
+        return String.format("%-30s ====> %d bytes",
+                mainName(denseName),
+                size
+        );
+    }
+
+    private static Map<String, String> getDenseNames(Collection<RunResult> results) {
+        return ClassUtils.denseClassNames(results.stream()
+                .map(RunResult::getParams)
+                .map(p -> p.getBenchmark())
+                .collect(toSet()));
+    }
+
+    private static String mainName(String denseName) {
+        return denseName.replace(".sizer", "");
     }
 }

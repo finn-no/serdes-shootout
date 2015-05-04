@@ -16,7 +16,6 @@
 
 package no.finntech.shootout.avro;
 
-import java.io.InputStream;
 import java.io.OutputStream;
 
 import org.apache.avro.io.Decoder;
@@ -24,26 +23,14 @@ import org.apache.avro.io.DecoderFactory;
 import org.apache.avro.io.Encoder;
 import org.apache.avro.io.EncoderFactory;
 
-public final class BinaryAvro extends AvroBase {
-    public BinaryAvro() {
-    }
-
-    public BinaryAvro(String compressor) {
-        super(compressor);
-    }
-
-    @Override
-    public String getName() {
-        return "Avro" + getCompressor().map(c -> "+" + c).orElse("");
-    }
-
+public class BinaryAvro extends AvroBase {
     @Override
     protected Encoder getEncoder(OutputStream out) {
         return EncoderFactory.get().binaryEncoder(out, null);
     }
 
     @Override
-    protected Decoder getDecoder(InputStream in) {
-        return DecoderFactory.get().binaryDecoder(in, null);
+    protected Decoder getDecoder(byte[] bytes) {
+        return DecoderFactory.get().binaryDecoder(bytes, null);
     }
 }

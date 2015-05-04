@@ -16,38 +16,29 @@
 
 package no.finntech.shootout;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+
+import org.openjdk.jmh.annotations.Benchmark;
+import org.openjdk.jmh.annotations.Fork;
+import org.openjdk.jmh.infra.BenchmarkParams;
 
 public abstract class AbstractCase implements Case {
-    private ByteArrayOutputStream out;
-    private ByteArrayInputStream in;
+    private static final Map<String, Integer> SIZES = new ConcurrentHashMap<>();
 
-    @Override
-    public final void init() {
-        out = new ByteArrayOutputStream();
+    private static void saveSize(String benchmark, int size) {
+        SIZES.put(benchmark, size);
     }
 
-    @Override
-    public abstract String getName();
-
-    @Override
-    public abstract void write();
-
-    @Override
-    public final int getSize() {
-        in = new ByteArrayInputStream(out.toByteArray());
-        return out.size();
+    public static Map<String, Integer> getSizes() {
+        return SIZES;
     }
 
-    @Override
-    public abstract void read();
-
-    protected ByteArrayOutputStream getOut() {
-        return out;
+    @Benchmark
+    @Fork(0)
+    public void sizer(BenchmarkParams params) {
+        saveSize(params.getBenchmark(), getSize());
     }
 
-    protected ByteArrayInputStream getIn() {
-        return in;
-    }
+    public abstract int getSize();
 }

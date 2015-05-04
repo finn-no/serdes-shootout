@@ -17,34 +17,22 @@
 package no.finntech.shootout.avro;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.OutputStream;
 
 import org.apache.avro.io.Decoder;
 import org.apache.avro.io.DecoderFactory;
 import org.apache.avro.io.Encoder;
 import org.apache.avro.io.EncoderFactory;
+import org.apache.avro.util.Utf8;
 
-public final class JsonAvro extends AvroBase {
-    public JsonAvro() {
-    }
-
-    public JsonAvro(String compressor) {
-        super(compressor);
-    }
-
-    @Override
-    public String getName() {
-        return "Avro/Json" + getCompressor().map(c -> "+" + c).orElse("");
-    }
-
+public class JsonAvro extends AvroBase {
     @Override
     protected Encoder getEncoder(OutputStream out) throws IOException {
         return EncoderFactory.get().jsonEncoder(AvroPost.getClassSchema(), out);
     }
 
     @Override
-    protected Decoder getDecoder(InputStream in) throws IOException {
-        return DecoderFactory.get().jsonDecoder(AvroPost.getClassSchema(), in);
+    protected Decoder getDecoder(byte[] bytes) throws IOException {
+        return DecoderFactory.get().jsonDecoder(AvroPost.getClassSchema(), new String(bytes));
     }
 }

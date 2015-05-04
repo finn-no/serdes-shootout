@@ -14,12 +14,14 @@
  *    limitations under the License.
  */
 
-package no.finntech.shootout;
+package no.finntech.shootout.avro;
 
-public interface Case {
-    String PUBLISHED = "2015-02-10T15:04:55Z";
-    String PERSON_ID = "urn:example:person:martin";
-    String PERSON_NAME = "Martin Smith";
-    String ARTICLE_ID = "urn:example:blog:abc123/xyz";
-    String ARTICLE_NAME = "Why I'm testing serialization performance";
+import org.apache.commons.compress.compressors.CompressorStreamFactory;
+
+public class DeflateJsonAvro extends CompressedJsonAvro {
+
+    @Override
+    protected String getCompressor() {
+        return CompressorStreamFactory.DEFLATE;
+    }
 }

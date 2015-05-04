@@ -17,7 +17,7 @@
 
 <configuration>
     <appenders>
-        <Console name="STDOUT" target="SYSTEM_ERR">
+        <Console name="STDOUT" target="SYSTEM_OUT">
             <PatternLayout pattern="[%5p] %d{HH:mm:ss}  %m %x%n"/>
         </Console>
     </appenders>
