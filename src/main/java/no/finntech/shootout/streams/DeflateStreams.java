@@ -16,21 +16,11 @@
 
 package no.finntech.shootout.streams;
 
-import java.io.IOException;
-import java.io.OutputStream;
+import org.apache.commons.compress.compressors.CompressorStreamFactory;
 
-import org.apache.streams.data.util.JsonUtil;
-
-public class Streams extends StreamsBase {
-
+public class DeflateStreams extends CompressedStreams {
     @Override
-    protected void writeTo(OutputStream out) throws IOException {
-        String json = JsonUtil.objectToJson(getPost());
-        out.write(json.getBytes());
-    }
-
-    @Override
-    protected String getJson() {
-        return new String(getBytes());
+    protected String getCompressor() {
+        return CompressorStreamFactory.DEFLATE;
     }
 }
