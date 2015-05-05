@@ -24,13 +24,14 @@ import no.finntech.shootout.Case;
 import org.apache.thrift.TDeserializer;
 import org.apache.thrift.TException;
 import org.apache.thrift.TSerializer;
+import org.apache.thrift.protocol.TProtocolFactory;
 import org.openjdk.jmh.annotations.Benchmark;
 import org.openjdk.jmh.annotations.Scope;
 import org.openjdk.jmh.annotations.Setup;
 import org.openjdk.jmh.annotations.State;
 
 @State(Scope.Thread)
-public class Thrift extends Case<ThriftPost> {
+public abstract class Thrift extends Case<ThriftPost> {
     private ThriftPost post;
     private byte[] bytes;
 
@@ -44,7 +45,7 @@ public class Thrift extends Case<ThriftPost> {
             .setObject(new Article()
                 .setId(ARTICLE_ID)
                 .setDisplayName(ARTICLE_NAME));
-        bytes = new TSerializer().serialize(post);
+        bytes = new TSerializer(getProtocolFactory()).serialize(post);
     }
 
     @Override
@@ -56,7 +57,7 @@ public class Thrift extends Case<ThriftPost> {
     @Benchmark
     public ByteArrayOutputStream write() throws TException, IOException, InterruptedException {
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-        outputStream.write(new TSerializer().serialize(post));
+        outputStream.write(new TSerializer(getProtocolFactory()).serialize(post));
         return outputStream;
     }
 
@@ -64,7 +65,9 @@ public class Thrift extends Case<ThriftPost> {
     @Benchmark
     public ThriftPost read() throws TException, InterruptedException {
         ThriftPost base = new ThriftPost();
-        new TDeserializer().deserialize(base, bytes);
+        new TDeserializer(getProtocolFactory()).deserialize(base, bytes);
         return base;
     }
+
+    protected abstract TProtocolFactory getProtocolFactory();
 }
