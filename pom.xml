@@ -59,6 +59,11 @@
             <artifactId>libthrift</artifactId>
             <version>0.9.1</version>
         </dependency>
+        <dependency>
+            <groupId>com.google.protobuf</groupId>
+            <artifactId>protobuf-java</artifactId>
+            <version>2.5.0</version>
+        </dependency>
 
         <!-- JMH benchmark -->
         <dependency>
@@ -191,6 +196,7 @@
                 <version>1.2.1</version>
                 <executions>
                     <execution>
+                        <id>generate-thrift-sources</id>
                         <phase>generate-sources</phase>
                         <goals>
                             <goal>exec</goal>
@@ -199,6 +205,19 @@
                             <executable>thrift-0.9.1</executable>
                             <commandlineArgs>-out ${project.build.directory}/generated-sources/java/ --gen java:private-members,hashcode
                                 ${project.basedir}/src/main/thrift/case.thrift
+                            </commandlineArgs>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>generate-protobuf-sources</id>
+                        <phase>generate-sources</phase>
+                        <goals>
+                            <goal>exec</goal>
+                        </goals>
+                        <configuration>
+                            <executable>protoc</executable>
+                            <commandlineArgs>--java_out=${project.build.directory}/generated-sources/java/
+                                --proto_path=${project.basedir}/src/main/protobuf/ ${project.basedir}/src/main/protobuf/case.proto
                             </commandlineArgs>
                         </configuration>
                     </execution>
