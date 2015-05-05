@@ -22,6 +22,9 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import org.openjdk.jmh.annotations.Benchmark;
 import org.openjdk.jmh.annotations.Fork;
+import org.openjdk.jmh.annotations.Scope;
+import org.openjdk.jmh.annotations.Setup;
+import org.openjdk.jmh.annotations.State;
 import org.openjdk.jmh.infra.BenchmarkParams;
 
 /**
@@ -33,6 +36,7 @@ import org.openjdk.jmh.infra.BenchmarkParams;
  *
  * @param <T> The type of the post-object
  */
+@State(Scope.Thread)
 public abstract class Case<T> {
     public static final String PUBLISHED = "2015-02-10T15:04:55Z";
     public static final String PERSON_ID = "urn:example:person:morten";
@@ -42,30 +46,15 @@ public abstract class Case<T> {
 
     private static final Map<String, Integer> SIZES = new ConcurrentHashMap<>();
 
-    private static void saveSize(String benchmark, int size) {
-        SIZES.put(benchmark, size);
-    }
-
-    public static Map<String, Integer> getSizes() {
-        return SIZES;
-    }
-
-    @Benchmark
-    @Fork(0)
-    public void sizer(BenchmarkParams params) {
-        saveSize(params.getBenchmark(), getSize());
-    }
+    private T post;
+    private byte[] bytes;
 
     /**
-     * Return the size of the content, after serialization.
+     * Return a complete post-object for use in serialization
      *
-     * This will typically just be the length of the bytebuffer in the
-     * ByteArrayOutputStream returned from write, but you might want to
-     * create it in a separate setup step.
-     *
-     * @return size of serialization
+     * @return A post-object
      */
-    public abstract int getSize();
+    protected abstract T buildPost();
 
     /**
      * Write the post-object to a ByteArrayOutputStream using the
@@ -89,4 +78,37 @@ public abstract class Case<T> {
      * @throws Exception
      */
     public abstract T read() throws Exception;
+
+    private static void saveSize(String benchmark, int size) {
+        SIZES.put(benchmark, size);
+    }
+
+    public static Map<String, Integer> getSizes() {
+        return SIZES;
+    }
+
+    @Setup
+    public void prepare() throws Exception {
+        post = buildPost();
+        ByteArrayOutputStream baos = write();
+        bytes = baos.toByteArray();
+    }
+
+    @Benchmark
+    @Fork(0)
+    public void sizer(BenchmarkParams params) {
+        saveSize(params.getBenchmark(), getSize());
+    }
+
+    public int getSize() {
+        return bytes.length;
+    }
+
+    public T getPost() {
+        return post;
+    }
+
+    public byte[] getBytes() {
+        return bytes;
+    }
 }

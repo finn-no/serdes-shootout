@@ -22,18 +22,12 @@ import java.io.IOException;
 import no.finntech.shootout.Case;
 
 import org.openjdk.jmh.annotations.Benchmark;
-import org.openjdk.jmh.annotations.Scope;
-import org.openjdk.jmh.annotations.Setup;
-import org.openjdk.jmh.annotations.State;
 
-@State(Scope.Thread)
 public class Protobuf extends Case<CaseProtos.ProtobufPost> {
-    private CaseProtos.ProtobufPost post;
-    private byte[] bytes;
 
-    @Setup
-    public void prepare() {
-        post = CaseProtos.ProtobufPost.newBuilder()
+    @Override
+    protected CaseProtos.ProtobufPost buildPost() {
+        return CaseProtos.ProtobufPost.newBuilder()
                 .setPublished(PUBLISHED)
                 .setActor(CaseProtos.Person.newBuilder()
                         .setId(PERSON_ID)
@@ -42,25 +36,19 @@ public class Protobuf extends Case<CaseProtos.ProtobufPost> {
                         .setId(ARTICLE_ID)
                         .setDisplayName(ARTICLE_NAME))
                 .build();
-        bytes = post.toByteArray();
-    }
-
-    @Override
-    public int getSize() {
-        return bytes.length;
     }
 
     @Override
     @Benchmark
     public ByteArrayOutputStream write() throws IOException {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        post.writeTo(baos);
+        getPost().writeTo(baos);
         return baos;
     }
 
     @Override
     @Benchmark
     public CaseProtos.ProtobufPost read() throws Exception {
-        return CaseProtos.ProtobufPost.parseFrom(bytes);
+        return CaseProtos.ProtobufPost.parseFrom(getBytes());
     }
 }

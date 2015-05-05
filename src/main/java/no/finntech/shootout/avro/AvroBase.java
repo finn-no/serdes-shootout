@@ -30,18 +30,12 @@ import org.apache.avro.specific.SpecificDatumReader;
 import org.apache.avro.specific.SpecificDatumWriter;
 import org.apache.commons.compress.compressors.CompressorException;
 import org.openjdk.jmh.annotations.Benchmark;
-import org.openjdk.jmh.annotations.Scope;
-import org.openjdk.jmh.annotations.Setup;
-import org.openjdk.jmh.annotations.State;
 
-@State(Scope.Thread)
 public abstract class AvroBase extends Case<AvroPost> {
-    private AvroPost post;
-    private byte[] bytes;
 
-    @Setup
-    public void prepare() throws IOException, CompressorException {
-        post = AvroPost.newBuilder()
+    @Override
+    protected AvroPost buildPost() {
+        return AvroPost.newBuilder()
             .setPublished(PUBLISHED)
             .setActor(Person.newBuilder()
                     .setId(PERSON_ID)
@@ -52,15 +46,15 @@ public abstract class AvroBase extends Case<AvroPost> {
                     .setDisplayName(ARTICLE_NAME)
                     .build())
             .build();
-        ByteArrayOutputStream out = encode();
-        bytes = out.toByteArray();
     }
 
-    private ByteArrayOutputStream encode() throws IOException, CompressorException {
+    @Override
+    @Benchmark
+    public ByteArrayOutputStream write() throws IOException, CompressorException {
         DatumWriter<AvroPost> datumWriter = new SpecificDatumWriter<>(AvroPost.class);
         ByteArrayOutputStream out = new ByteArrayOutputStream();
         Encoder encoder = getEncoder(out);
-        datumWriter.write(post, encoder);
+        datumWriter.write(getPost(), encoder);
         encoder.flush();
         out.flush();
         out.close();
@@ -69,21 +63,10 @@ public abstract class AvroBase extends Case<AvroPost> {
 
     @Override
     @Benchmark
-    public ByteArrayOutputStream write() throws IOException, CompressorException {
-        return encode();
-    }
-
-    @Override
-    @Benchmark
     public AvroPost read() throws IOException, CompressorException {
         DatumReader<AvroPost> datumReader = new SpecificDatumReader<>(AvroPost.class);
-        Decoder decoder = getDecoder(bytes);
+        Decoder decoder = getDecoder(getBytes());
         return datumReader.read(null, decoder);
-    }
-
-    @Override
-    public int getSize() {
-        return bytes.length;
     }
 
     protected abstract Encoder getEncoder(OutputStream out) throws IOException, CompressorException;

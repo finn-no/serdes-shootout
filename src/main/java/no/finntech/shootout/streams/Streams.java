@@ -26,18 +26,12 @@ import org.apache.streams.pojo.json.Activity;
 import org.apache.streams.pojo.json.Actor;
 import org.apache.streams.pojo.json.objectTypes.Article;
 import org.openjdk.jmh.annotations.Benchmark;
-import org.openjdk.jmh.annotations.Scope;
-import org.openjdk.jmh.annotations.Setup;
-import org.openjdk.jmh.annotations.State;
 
-@State(Scope.Thread)
 public class Streams extends Case<Activity> {
-    private Activity post;
-    private byte[] bytes;
 
-    @Setup
-    public void prepare() {
-        post = new Activity()
+    @Override
+    protected Activity buildPost() {
+        return new Activity()
                 .withPublished(RFC3339Utils.parseUTC(PUBLISHED))
                 .withActor((Actor)new Actor()
                     .withId(PERSON_ID)
@@ -45,20 +39,13 @@ public class Streams extends Case<Activity> {
                 .withObject(new Article()
                         .withId(ARTICLE_ID)
                         .withDisplayName(ARTICLE_NAME));
-        String json = JsonUtil.objectToJson(post);
-        bytes = json.getBytes();
-    }
-
-    @Override
-    public int getSize() {
-        return bytes.length;
     }
 
     @Override
     @Benchmark
     public ByteArrayOutputStream write() throws Exception {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        String json = JsonUtil.objectToJson(post);
+        String json = JsonUtil.objectToJson(getPost());
         baos.write(json.getBytes());
         return baos;
     }
@@ -66,7 +53,7 @@ public class Streams extends Case<Activity> {
     @Override
     @Benchmark
     public Activity read() throws Exception {
-        String json = new String(bytes);
+        String json = new String(getBytes());
         return JsonUtil.jsonToObject(json, Activity.class);
     }
 }
