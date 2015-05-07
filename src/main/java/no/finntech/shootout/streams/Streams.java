@@ -25,7 +25,7 @@ public class Streams extends StreamsBase {
 
     @Override
     protected void writeTo(OutputStream out) throws IOException {
-        String json = JsonUtil.objectToJson(getPost());
+        String json = JsonUtil.objectToJson(getObject());
         out.write(json.getBytes());
     }
 

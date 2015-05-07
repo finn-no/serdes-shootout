@@ -40,7 +40,7 @@ import org.openjdk.jmh.annotations.Benchmark;
 
 public abstract class StreamsBase extends Case<Activity> {
     @Override
-    protected Activity buildPost() {
+    protected Activity buildObject() {
         return new Activity()
                 .withPublished(RFC3339Utils.parseToUTC(Constants.PUBLISHED))
                 .withActor((Actor) new Actor()

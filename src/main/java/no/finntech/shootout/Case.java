@@ -30,28 +30,30 @@ import org.openjdk.jmh.infra.BenchmarkParams;
 /**
  * Harness to benchmark serialization/deserialization using a suitable mechanism.
  *
- * A post-object with a common structure and data should be created. Make sure it
- * carries the same information as the post-objects used in other Cases, so the
- * benchmarks are comparable. Use the constants defined here to set fieldvalues.
+ * An object with a common structure and data should be created. Make sure it
+ * carries the same information as the objects used in other Cases, so the
+ * benchmarks are comparable.
  *
- * @param <T> The type of the post-object
+ * Use the constants defined in {@see Constants} to set fieldvalues.
+ *
+ * @param <T> The type of the object
  */
 @State(Scope.Thread)
 public abstract class Case<T> {
     private static final Map<String, Integer> SIZES = new ConcurrentHashMap<>();
 
-    private T post;
+    private T object;
     private byte[] bytes;
 
     /**
-     * Return a complete post-object for use in serialization
+     * Return a complete object for use in serialization
      *
-     * @return A post-object
+     * @return An object for serialization
      */
-    protected abstract T buildPost();
+    protected abstract T buildObject();
 
     /**
-     * Write the post-object to a ByteArrayOutputStream using the
+     * Write the object to a ByteArrayOutputStream using the
      * serialization mechanism to test.
      *
      * Must be annotated with @Benchmark
@@ -63,12 +65,12 @@ public abstract class Case<T> {
 
     /**
      * Load a pre-created byte[], using the appropriate deserialization
-     * mechanism. Should return an object similar to the post-object
+     * mechanism. Should return an object similar to the object
      * serialized in write.
      *
      * Must be annotated with @Benchmark
      *
-     * @return post-object of suitable type
+     * @return object-object of suitable type
      * @throws Exception
      */
     public abstract T read() throws Exception;
@@ -83,7 +85,7 @@ public abstract class Case<T> {
 
     @Setup
     public void prepare() throws Exception {
-        post = buildPost();
+        object = buildObject();
         ByteArrayOutputStream baos = write();
         bytes = baos.toByteArray();
     }
@@ -98,8 +100,8 @@ public abstract class Case<T> {
         return bytes.length;
     }
 
-    public T getPost() {
-        return post;
+    public T getObject() {
+        return object;
     }
 
     public byte[] getBytes() {

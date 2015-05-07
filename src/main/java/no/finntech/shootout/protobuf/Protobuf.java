@@ -34,7 +34,7 @@ import org.openjdk.jmh.annotations.Benchmark;
 public class Protobuf extends Case<ProtobufView> {
 
     @Override
-    protected ProtobufView buildPost() {
+    protected ProtobufView buildObject() {
         return ProtobufView.newBuilder()
                 .setPublished(Constants.PUBLISHED)
                 .setActor(Person.newBuilder()
@@ -65,7 +65,7 @@ public class Protobuf extends Case<ProtobufView> {
     @Benchmark
     public ByteArrayOutputStream write() throws IOException {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        getPost().writeTo(baos);
+        getObject().writeTo(baos);
         return baos;
     }
 

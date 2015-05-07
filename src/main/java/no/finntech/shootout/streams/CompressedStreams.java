@@ -32,7 +32,7 @@ public abstract class CompressedStreams extends StreamsBase {
 
     @Override
     protected void writeTo(OutputStream out) throws IOException, CompressorException {
-        String json = JsonUtil.objectToJson(getPost());
+        String json = JsonUtil.objectToJson(getObject());
         CompressorOutputStream outputStream = FACTORY.createCompressorOutputStream(getCompressor(), out);
         outputStream.write(json.getBytes());
         outputStream.flush();

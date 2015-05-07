@@ -37,7 +37,7 @@ import org.openjdk.jmh.annotations.Benchmark;
 public abstract class Thrift extends Case<ThriftView> {
 
     @Override
-    protected ThriftView buildPost() {
+    protected ThriftView buildObject() {
         return new ThriftView()
                 .setPublished(Constants.PUBLISHED)
                 .setActor(new Person()
@@ -68,7 +68,7 @@ public abstract class Thrift extends Case<ThriftView> {
     @Benchmark
     public ByteArrayOutputStream write() throws TException, IOException, InterruptedException {
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-        outputStream.write(new TSerializer(getProtocolFactory()).serialize(getPost()));
+        outputStream.write(new TSerializer(getProtocolFactory()).serialize(getObject()));
         return outputStream;
     }
 

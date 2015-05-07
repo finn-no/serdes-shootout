@@ -41,7 +41,7 @@ import org.openjdk.jmh.annotations.Benchmark;
 public abstract class AvroBase extends Case<AvroView> {
 
     @Override
-    protected AvroView buildPost() {
+    protected AvroView buildObject() {
         return AvroView.newBuilder()
                 .setPublished(Constants.PUBLISHED)
                 .setActor(Person.newBuilder()
@@ -80,7 +80,7 @@ public abstract class AvroBase extends Case<AvroView> {
         DatumWriter<AvroView> datumWriter = new SpecificDatumWriter<>(AvroView.class);
         ByteArrayOutputStream out = new ByteArrayOutputStream();
         Encoder encoder = getEncoder(out);
-        datumWriter.write(getPost(), encoder);
+        datumWriter.write(getObject(), encoder);
         encoder.flush();
         out.flush();
         out.close();
