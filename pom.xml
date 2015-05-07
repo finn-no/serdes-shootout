@@ -32,6 +32,12 @@
         <version.jdk>1.8</version.jdk>
         <version.log4j>2.0.2</version.log4j>
         <version.jmh>1.9.1</version.jmh>
+
+        <version.thrift>0.9.1</version.thrift>
+        <version.protobuf>2.5.0</version.protobuf>
+
+        <thrift.executable>thrift-${version.thrift}</thrift.executable>
+        <protobuf.executable>protoc</protobuf.executable>
     </properties>
 
     <dependencies>
@@ -57,12 +63,12 @@
         <dependency>
             <groupId>org.apache.thrift</groupId>
             <artifactId>libthrift</artifactId>
-            <version>0.9.1</version>
+            <version>${version.thrift}</version>
         </dependency>
         <dependency>
             <groupId>com.google.protobuf</groupId>
             <artifactId>protobuf-java</artifactId>
-            <version>2.5.0</version>
+            <version>${version.protobuf}</version>
         </dependency>
         <dependency>
             <groupId>org.apache.streams</groupId>
@@ -209,6 +215,14 @@
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>exec-maven-plugin</artifactId>
                 <version>1.2.1</version>
+                <configuration>
+                    <executable>java</executable>
+                    <arguments>
+                        <argument>-classpath</argument>
+                        <classpath/>
+                        <argument>no.finntech.shootout.Main</argument>
+                    </arguments>
+                </configuration>
                 <executions>
                     <execution>
                         <id>generate-thrift-sources</id>
@@ -217,7 +231,7 @@
                             <goal>exec</goal>
                         </goals>
                         <configuration>
-                            <executable>thrift-0.9.1</executable>
+                            <executable>${thrift.executable}</executable>
                             <commandlineArgs>-out ${project.build.directory}/generated-sources/java/ --gen java:private-members,hashcode
                                 ${project.basedir}/src/main/thrift/case.thrift
                             </commandlineArgs>
@@ -230,10 +244,40 @@
                             <goal>exec</goal>
                         </goals>
                         <configuration>
-                            <executable>protoc</executable>
+                            <executable>${protobuf.executable}</executable>
                             <commandlineArgs>--java_out=${project.build.directory}/generated-sources/java/
                                 --proto_path=${project.basedir}/src/main/protobuf/ ${project.basedir}/src/main/protobuf/case.proto
                             </commandlineArgs>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-shade-plugin</artifactId>
+                <version>2.3</version>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>shade</goal>
+                        </goals>
+                        <configuration>
+                            <transformers>
+                                <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+                                    <mainClass>no.finntech.shootout.Main</mainClass>
+                                </transformer>
+                            </transformers>
+                            <filters>
+                                <filter>
+                                    <artifact>*:*</artifact>
+                                    <excludes>
+                                        <exclude>META-INF/*.SF</exclude>
+                                        <exclude>META-INF/*.DSA</exclude>
+                                        <exclude>META-INF/*.RSA</exclude>
+                                    </excludes>
+                                </filter>
+                            </filters>
                         </configuration>
                     </execution>
                 </executions>
