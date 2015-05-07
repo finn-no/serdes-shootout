@@ -21,7 +21,6 @@ public final class Constants {
 
     public interface Viewer {
         String ID = "123456789";
-        String UNIQUE = "3423414";
         String UNIQUE_ID = "353sdf3fdcs23c";
         String SESSION_ID = "AAFEEDE3122FF";
         String USER_AGENT = "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/42.0.2311.90";

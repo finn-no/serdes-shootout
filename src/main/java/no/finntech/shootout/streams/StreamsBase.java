@@ -21,25 +21,53 @@ import java.io.IOException;
 import java.io.OutputStream;
 
 import no.finntech.shootout.Case;
+import no.finntech.shootout.Constants;
+import no.finntech.shootout.Constants.Ad;
+import no.finntech.shootout.Constants.AttributedTo;
+import no.finntech.shootout.Constants.AvailableAt;
+import no.finntech.shootout.Constants.Viewer;
 
 import org.apache.commons.compress.compressors.CompressorException;
 import org.apache.streams.data.util.JsonUtil;
+import org.apache.streams.data.util.RFC3339Utils;
 import org.apache.streams.pojo.json.Activity;
+import org.apache.streams.pojo.json.ActivityObject;
+import org.apache.streams.pojo.json.Actor;
+import org.apache.streams.pojo.json.Generator;
+import org.apache.streams.pojo.json.objectTypes.Offer;
+import org.apache.streams.pojo.json.objectTypes.Place;
 import org.openjdk.jmh.annotations.Benchmark;
 
 public abstract class StreamsBase extends Case<Activity> {
     @Override
     protected Activity buildPost() {
-        return new Activity();
-/*
-                .withPublished(RFC3339Utils.parseUTC(PUBLISHED))
-                .withActor((Actor)new Actor()
-                    .withId(PERSON_ID)
-                    .withDisplayName(PERSON_NAME))
-                .withObject(new Article()
-                        .withId(ARTICLE_ID)
-                        .withDisplayName(ARTICLE_NAME));
-*/
+        return new Activity()
+                .withPublished(RFC3339Utils.parseToUTC(Constants.PUBLISHED))
+                .withActor((Actor) new Actor()
+                        .withObjectType("Person")
+                        .withId(Viewer.ID)
+                        .withAdditionalProperty("uniqueVisitorId", Viewer.UNIQUE_ID)
+                        .withAdditionalProperty("sessionId", Viewer.SESSION_ID)
+                        .withAdditionalProperty("userAgent", Viewer.USER_AGENT)
+                        .withAdditionalProperty("clientDevice", Viewer.CLIENT_DEVICE)
+                        .withAdditionalProperty("remoteAddr", Viewer.REMOTE_ADDR))
+                .withObject(new Offer()
+                        .withId(Ad.ID)
+                        .withAdditionalProperty("name", Ad.NAME)
+                        .withAdditionalProperty("category", Ad.CATEGORY)
+                        .withAdditionalProperty("seller", new Actor()
+                                .withObjectType("Person")
+                                .withId(Constants.Seller.ID))
+                        .withAdditionalProperty("availableAt", new Place()
+                            .withAdditionalProperty("id", AvailableAt.ID))
+                        .withAdditionalProperty("proce", Ad.PRICE))
+                .withGenerator((Generator) new Generator()
+                        .withObjectType("Application")
+                        .withId(Constants.Generator.ID))
+                .withAdditionalProperty("attributedTo", new ActivityObject()
+                        .withObjectType("Link")
+                        .withAdditionalProperty("href", AttributedTo.HREF)
+                        .withAdditionalProperty("rel", AttributedTo.REL));
     }
 
     @Override
