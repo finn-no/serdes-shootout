@@ -69,7 +69,7 @@ public final class Main {
     }
 
     private static String buildBenchmarkResult(Result primaryResult, String denseName) {
-        return String.format("%-30s score: %10.2f %s",
+        return String.format("%-40s score: %10.2f %s",
                 denseName,
                 primaryResult.getScore(),
                 primaryResult.getScoreUnit()
@@ -77,7 +77,7 @@ public final class Main {
     }
 
     private static String buildBenchmarkHeader(String denseName, Integer size) {
-        return String.format("%-30s ====> %d bytes",
+        return String.format("%-40s ====> %d bytes",
                 mainName(denseName),
                 size
         );
