@@ -21,6 +21,13 @@ import java.io.IOException;
 import java.io.OutputStream;
 
 import no.finntech.shootout.Case;
+import no.finntech.shootout.Constants;
+import no.finntech.shootout.Constants.Ad;
+import no.finntech.shootout.Constants.AttributedTo;
+import no.finntech.shootout.Constants.AvailableAt;
+import no.finntech.shootout.Constants.Generator;
+import no.finntech.shootout.Constants.Seller;
+import no.finntech.shootout.Constants.Viewer;
 
 import org.apache.avro.io.DatumReader;
 import org.apache.avro.io.DatumWriter;
@@ -31,27 +38,46 @@ import org.apache.avro.specific.SpecificDatumWriter;
 import org.apache.commons.compress.compressors.CompressorException;
 import org.openjdk.jmh.annotations.Benchmark;
 
-public abstract class AvroBase extends Case<AvroPost> {
+public abstract class AvroBase extends Case<AvroView> {
 
     @Override
-    protected AvroPost buildPost() {
-        return AvroPost.newBuilder()
-            .setPublished(PUBLISHED)
-            .setActor(Person.newBuilder()
-                    .setId(PERSON_ID)
-                    .setDisplayName(PERSON_NAME)
-                    .build())
-            .setObject(Article.newBuilder()
-                    .setId(ARTICLE_ID)
-                    .setDisplayName(ARTICLE_NAME)
-                    .build())
-            .build();
+    protected AvroView buildPost() {
+        return AvroView.newBuilder()
+                .setPublished(Constants.PUBLISHED)
+                .setActor(Person.newBuilder()
+                        .setId(Viewer.ID)
+                        .setUniqueVisitorId(Viewer.UNIQUE_ID)
+                        .setSessionId(Viewer.SESSION_ID)
+                        .setUserAgent(Viewer.USER_AGENT)
+                        .setClientDevice(Viewer.CLIENT_DEVICE)
+                        .setRemoteAddr(Viewer.REMOTE_ADDR)
+                        .build())
+                .setObject(Offer.newBuilder()
+                        .setId(Ad.ID)
+                        .setName(Ad.NAME)
+                        .setCategory(Ad.CATEGORY)
+                        .setSeller(Person.newBuilder()
+                                .setId(Seller.ID)
+                                .build())
+                        .setAvailableAt(Place.newBuilder()
+                                .setId(AvailableAt.ID)
+                                .build())
+                        .setPrice(Ad.PRICE)
+                        .build())
+                .setGenerator(Application.newBuilder()
+                        .setId(Generator.ID)
+                        .build())
+                .setAttributedTo(Link.newBuilder()
+                        .setHref(AttributedTo.HREF)
+                        .setRel(AttributedTo.REL)
+                        .build())
+                .build();
     }
 
     @Override
     @Benchmark
     public ByteArrayOutputStream write() throws IOException, CompressorException {
-        DatumWriter<AvroPost> datumWriter = new SpecificDatumWriter<>(AvroPost.class);
+        DatumWriter<AvroView> datumWriter = new SpecificDatumWriter<>(AvroView.class);
         ByteArrayOutputStream out = new ByteArrayOutputStream();
         Encoder encoder = getEncoder(out);
         datumWriter.write(getPost(), encoder);
@@ -63,12 +89,13 @@ public abstract class AvroBase extends Case<AvroPost> {
 
     @Override
     @Benchmark
-    public AvroPost read() throws IOException, CompressorException {
-        DatumReader<AvroPost> datumReader = new SpecificDatumReader<>(AvroPost.class);
+    public AvroView read() throws IOException, CompressorException {
+        DatumReader<AvroView> datumReader = new SpecificDatumReader<>(AvroView.class);
         Decoder decoder = getDecoder(getBytes());
         return datumReader.read(null, decoder);
     }
 
     protected abstract Encoder getEncoder(OutputStream out) throws IOException, CompressorException;
+
     protected abstract Decoder getDecoder(byte[] bytes) throws IOException, CompressorException;
 }

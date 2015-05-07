@@ -38,12 +38,6 @@ import org.openjdk.jmh.infra.BenchmarkParams;
  */
 @State(Scope.Thread)
 public abstract class Case<T> {
-    public static final String PUBLISHED = "2015-02-10T15:04:55Z";
-    public static final String PERSON_ID = "urn:example:person:morten";
-    public static final String PERSON_NAME = "Morten Lied Johansen";
-    public static final String ARTICLE_ID = "urn:example:blog:abc123/xyz";
-    public static final String ARTICLE_NAME = "Why I'm testing serialization performance";
-
     private static final Map<String, Integer> SIZES = new ConcurrentHashMap<>();
 
     private T post;

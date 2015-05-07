@@ -45,7 +45,7 @@ public abstract class CompressedJsonAvro extends AvroBase {
     protected Decoder getDecoder(byte[] bytes) throws IOException, CompressorException {
         ByteArrayInputStream in = new ByteArrayInputStream(bytes);
         CompressorInputStream inputStream = FACTORY.createCompressorInputStream(getCompressor(), in);
-        return DecoderFactory.get().jsonDecoder(AvroPost.getClassSchema(), inputStream);
+        return DecoderFactory.get().jsonDecoder(AvroView.getClassSchema(), inputStream);
     }
 
     public class EncoderWrapper extends Encoder {
@@ -54,7 +54,7 @@ public abstract class CompressedJsonAvro extends AvroBase {
 
         public EncoderWrapper(OutputStream out) throws CompressorException, IOException {
             outputStream = FACTORY.createCompressorOutputStream(getCompressor(), out);
-            encoder = EncoderFactory.get().jsonEncoder(AvroPost.getClassSchema(), outputStream);
+            encoder = EncoderFactory.get().jsonEncoder(AvroView.getClassSchema(), outputStream);
         }
 
         @Override

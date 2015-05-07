@@ -1,23 +1,52 @@
 {"namespace": "no.finntech.shootout.avro",
- "type": "record",
- "name": "AvroPost",
- "fields": [
-   {"name": "published", "type": "string"},
-   {"name": "actor", "type": {
-     "type": "record",
-     "name": "Person",
-     "fields": [
-       {"name": "id", "type": "string"},
-       {"name": "displayName", "type": "string"}
-     ]
-   }},
-   {"name": "object", "type": {
-     "type": "record",
-     "name": "Article",
-     "fields": [
-       {"name": "id", "type": "string"},
-       {"name": "displayName", "type": "string"}
-     ]
-   }}
- ]
+  "type": "record",
+  "name": "AvroView",
+  "fields": [
+    {"name": "published", "type": "string"},
+    {"name": "actor", "type": {
+      "type": "record",
+      "name": "Person",
+      "fields": [
+        {"name": "id", "type": "string"},
+        {"name": "uniqueVisitorId", "type": ["null", "string"], "default": null},
+        {"name": "sessionId", "type": ["null", "string"], "default": null},
+        {"name": "userAgent", "type": ["null", "string"], "default": null},
+        {"name": "clientDevice", "type": ["null", "string"], "default": null},
+        {"name": "remoteAddr", "type": ["null", "string"], "default": null}
+      ]
+    }},
+    {"name": "object", "type": {
+      "type": "record",
+      "name": "Offer",
+      "fields": [
+        {"name": "id", "type": "string"},
+        {"name": "name", "type": ["null", "string"], "default": null},
+        {"name": "category", "type": ["null", "string"], "default": null},
+        {"name": "seller", "type": ["null", "Person"], "default": null},
+        {"name": "availableAt", "type": ["null", {
+          "type": "record",
+          "name": "Place",
+          "fields": [
+            {"name": "id", "type": "string"}
+          ]
+        }], "default": null},
+        {"name": "price", "type": ["null", "int"], "default": null}
+      ]
+    }},
+    {"name": "generator", "type": {
+      "type": "record",
+      "name": "Application",
+      "fields": [
+        {"name": "id", "type": "string"}
+      ]
+    }},
+    {"name": "attributedTo", "type": {
+      "type": "record",
+      "name": "Link",
+      "fields": [
+        {"name": "href", "type": "string"},
+        {"name": "rel", "type": ["null", "string"], "default": null}
+      ]
+    }}
+  ]
 }

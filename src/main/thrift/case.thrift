@@ -16,18 +16,41 @@
 
 namespace java no.finntech.shootout.thrift
 
+struct Application {
+    1: required string id;
+}
+
+struct Place {
+    1: required string id;
+}
+
 struct Person {
     1: required string id;
-    2: required string displayName;
+    3: optional string uniqueVisitorId;
+    4: optional string sessionId;
+    5: optional string userAgent;
+    6: optional string clientDevice;
+    7: optional string remoteAddr;
 }
 
-struct Article {
+struct Offer {
     1: required string id;
-    2: required string displayName;
+    2: optional string name;
+    3: optional string category;
+    4: optional Person seller;
+    5: optional Place availableAt;
+    6: optional i32 price;
 }
 
-struct ThriftPost {
+struct Link {
+    1: required string href;
+    2: optional string rel;
+}
+
+struct ThriftView {
     1: required string published;
     2: required Person actor;
-    3: required Article object;
+    3: required Offer object;
+    4: optional Application generator;
+    5: optional Link attributedTo;
 }

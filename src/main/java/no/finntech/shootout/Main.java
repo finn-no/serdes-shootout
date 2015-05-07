@@ -47,6 +47,7 @@ public final class Main {
                 .warmupIterations(0)
                 .measurementIterations(1)
                 .verbosity(VerboseMode.SILENT)
+                .exclude(".*stream.*")
                 .build());
         LOG.info("Starting run...");
         Collection<RunResult> results = runner.run();

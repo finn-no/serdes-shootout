@@ -19,18 +19,41 @@ package shootout;
 option java_package = "no.finntech.shootout.protobuf";
 option java_outer_classname = "CaseProtos";
 
+message Application {
+    required string id = 1;
+}
+
+message Place {
+    required string id = 1;
+}
+
 message Person {
     required string id = 1;
-    required string displayName = 2;
+    optional string uniqueVisitorId = 3;
+    optional string sessionId = 4;
+    optional string userAgent = 5;
+    optional string clientDevice = 6;
+    optional string remoteAddr = 7;
 }
 
-message Article {
+message Offer {
     required string id = 1;
-    required string displayName = 2;
+    optional string name = 2;
+    optional string category = 3;
+    optional Person seller = 4;
+    optional Place availableAt = 5;
+    optional int32 price = 6;
 }
 
-message ProtobufPost {
+message Link {
+    required string href = 1;
+    optional string rel = 2;
+}
+
+message ProtobufView {
     required string published = 1;
     required Person actor = 2;
-    required Article object = 3;
+    required Offer object = 3;
+    optional Application generator = 4;
+    optional Link attributedTo = 5;
 }

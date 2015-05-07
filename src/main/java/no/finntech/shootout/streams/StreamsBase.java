@@ -24,16 +24,14 @@ import no.finntech.shootout.Case;
 
 import org.apache.commons.compress.compressors.CompressorException;
 import org.apache.streams.data.util.JsonUtil;
-import org.apache.streams.data.util.RFC3339Utils;
 import org.apache.streams.pojo.json.Activity;
-import org.apache.streams.pojo.json.Actor;
-import org.apache.streams.pojo.json.objectTypes.Article;
 import org.openjdk.jmh.annotations.Benchmark;
 
 public abstract class StreamsBase extends Case<Activity> {
     @Override
     protected Activity buildPost() {
-        return new Activity()
+        return new Activity();
+/*
                 .withPublished(RFC3339Utils.parseUTC(PUBLISHED))
                 .withActor((Actor)new Actor()
                     .withId(PERSON_ID)
@@ -41,6 +39,7 @@ public abstract class StreamsBase extends Case<Activity> {
                 .withObject(new Article()
                         .withId(ARTICLE_ID)
                         .withDisplayName(ARTICLE_NAME));
+*/
     }
 
     @Override

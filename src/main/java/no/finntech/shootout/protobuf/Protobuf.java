@@ -20,21 +20,44 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
 import no.finntech.shootout.Case;
+import no.finntech.shootout.Constants;
+import no.finntech.shootout.Constants.Ad;
+import no.finntech.shootout.Constants.AttributedTo;
+import no.finntech.shootout.Constants.AvailableAt;
+import no.finntech.shootout.Constants.Generator;
+import no.finntech.shootout.Constants.Seller;
+import no.finntech.shootout.Constants.Viewer;
+import no.finntech.shootout.protobuf.CaseProtos.*;
 
 import org.openjdk.jmh.annotations.Benchmark;
 
-public class Protobuf extends Case<CaseProtos.ProtobufPost> {
+public class Protobuf extends Case<ProtobufView> {
 
     @Override
-    protected CaseProtos.ProtobufPost buildPost() {
-        return CaseProtos.ProtobufPost.newBuilder()
-                .setPublished(PUBLISHED)
-                .setActor(CaseProtos.Person.newBuilder()
-                        .setId(PERSON_ID)
-                        .setDisplayName(PERSON_NAME))
-                .setObject(CaseProtos.Article.newBuilder()
-                        .setId(ARTICLE_ID)
-                        .setDisplayName(ARTICLE_NAME))
+    protected ProtobufView buildPost() {
+        return ProtobufView.newBuilder()
+                .setPublished(Constants.PUBLISHED)
+                .setActor(Person.newBuilder()
+                        .setId(Viewer.ID)
+                        .setUniqueVisitorId(Viewer.UNIQUE_ID)
+                        .setSessionId(Viewer.SESSION_ID)
+                        .setUserAgent(Viewer.USER_AGENT)
+                        .setClientDevice(Viewer.CLIENT_DEVICE)
+                        .setRemoteAddr(Viewer.REMOTE_ADDR))
+                .setObject(Offer.newBuilder()
+                        .setId(Ad.ID)
+                        .setName(Ad.NAME)
+                        .setCategory(Ad.CATEGORY)
+                        .setSeller(Person.newBuilder()
+                                .setId(Seller.ID))
+                        .setAvailableAt(Place.newBuilder()
+                                .setId(AvailableAt.ID))
+                        .setPrice(Ad.PRICE))
+                .setGenerator(Application.newBuilder()
+                        .setId(Generator.ID))
+                .setAttributedTo(Link.newBuilder()
+                        .setHref(AttributedTo.HREF)
+                        .setRel(AttributedTo.REL))
                 .build();
     }
 
@@ -48,7 +71,7 @@ public class Protobuf extends Case<CaseProtos.ProtobufPost> {
 
     @Override
     @Benchmark
-    public CaseProtos.ProtobufPost read() throws Exception {
-        return CaseProtos.ProtobufPost.parseFrom(getBytes());
+    public ProtobufView read() throws Exception {
+        return ProtobufView.parseFrom(getBytes());
     }
 }

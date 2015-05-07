@@ -23,16 +23,15 @@ import org.apache.avro.io.Decoder;
 import org.apache.avro.io.DecoderFactory;
 import org.apache.avro.io.Encoder;
 import org.apache.avro.io.EncoderFactory;
-import org.apache.avro.util.Utf8;
 
 public class JsonAvro extends AvroBase {
     @Override
     protected Encoder getEncoder(OutputStream out) throws IOException {
-        return EncoderFactory.get().jsonEncoder(AvroPost.getClassSchema(), out);
+        return EncoderFactory.get().jsonEncoder(AvroView.getClassSchema(), out);
     }
 
     @Override
     protected Decoder getDecoder(byte[] bytes) throws IOException {
-        return DecoderFactory.get().jsonDecoder(AvroPost.getClassSchema(), new String(bytes));
+        return DecoderFactory.get().jsonDecoder(AvroView.getClassSchema(), new String(bytes));
     }
 }
