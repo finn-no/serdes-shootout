@@ -44,8 +44,6 @@ public final class Main {
         Runner runner = new Runner(new OptionsBuilder()
                 .mode(Mode.AverageTime)
                 .timeUnit(TimeUnit.MICROSECONDS)
-                .warmupIterations(0)
-                .measurementIterations(1)
                 .verbosity(VerboseMode.SILENT)
                 .build());
         LOG.info("Starting run...");
