@@ -86,6 +86,12 @@
             </exclusions>
         </dependency>
 
+        <dependency>
+            <groupId>com.cognitect</groupId>
+            <artifactId>transit-java</artifactId>
+            <version>0.8.287</version>
+        </dependency>
+
         <!-- JMH benchmark -->
         <dependency>
             <groupId>org.openjdk.jmh</groupId>

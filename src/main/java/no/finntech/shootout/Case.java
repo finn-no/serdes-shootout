@@ -21,10 +21,13 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 import org.openjdk.jmh.annotations.Benchmark;
+import org.openjdk.jmh.annotations.BenchmarkMode;
 import org.openjdk.jmh.annotations.Fork;
+import org.openjdk.jmh.annotations.Mode;
 import org.openjdk.jmh.annotations.Scope;
 import org.openjdk.jmh.annotations.Setup;
 import org.openjdk.jmh.annotations.State;
+import org.openjdk.jmh.annotations.Warmup;
 import org.openjdk.jmh.infra.BenchmarkParams;
 
 /**
@@ -92,6 +95,8 @@ public abstract class Case<T> {
 
     @Benchmark
     @Fork(0)
+    @BenchmarkMode(Mode.SingleShotTime)
+    @Warmup(iterations = 1)
     public void sizer(BenchmarkParams params) {
         saveSize(params.getBenchmark(), getSize());
     }
