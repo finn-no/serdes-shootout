@@ -1,0 +1,87 @@
+Benchmark (Macbook Retina 15 inch, Late 2013, 16GB RAM, i7 2.3Ghz)
+Mode  Cnt      Score    Error  Units
+n.f.s.avro.BinaryAvro.read          avgt  200      8.805 ±  0.086  us/op
+n.f.s.avro.BinaryAvro.sizer         avgt   20      0.023 ±  0.001  us/op
+n.f.s.avro.BinaryAvro.write         avgt  200      3.285 ±  0.023  us/op
+n.f.s.avro.DeflateJsonAvro.read     avgt  200     35.629 ±  0.385  us/op
+n.f.s.avro.DeflateJsonAvro.sizer    avgt   20      0.024 ±  0.001  us/op
+n.f.s.avro.DeflateJsonAvro.write    avgt  200     72.334 ±  1.676  us/op
+n.f.s.avro.GzipJsonAvro.read        avgt  200     33.312 ±  0.244  us/op
+n.f.s.avro.GzipJsonAvro.sizer       avgt   20      0.024 ±  0.001  us/op
+n.f.s.avro.GzipJsonAvro.write       avgt  200     36.397 ±  0.333  us/op
+n.f.s.avro.JsonAvro.read            avgt  200     24.634 ±  0.183  us/op
+n.f.s.avro.JsonAvro.sizer           avgt   20      0.023 ±  0.001  us/op
+n.f.s.avro.JsonAvro.write           avgt  200     13.098 ±  0.088  us/op
+n.f.s.avro.XzJsonAvro.read          avgt  200   1076.199 ±  4.363  us/op
+n.f.s.avro.XzJsonAvro.sizer         avgt   20      0.026 ±  0.001  us/op
+n.f.s.avro.XzJsonAvro.write         avgt  200  12004.117 ± 89.383  us/op
+n.f.s.protobuf.Protobuf.read        avgt  200      0.673 ±  0.004  us/op
+n.f.s.protobuf.Protobuf.sizer       avgt   20      0.024 ±  0.001  us/op
+n.f.s.protobuf.Protobuf.write       avgt  200      0.378 ±  0.003  us/op
+n.f.s.streams.DeflateStreams.read   avgt  200     18.485 ±  0.143  us/op
+n.f.s.streams.DeflateStreams.sizer  avgt   20      0.024 ±  0.001  us/op
+n.f.s.streams.DeflateStreams.write  avgt  200    134.620 ± 22.840  us/op
+n.f.s.streams.GzipStreams.read      avgt  200     16.934 ±  0.163  us/op
+n.f.s.streams.GzipStreams.sizer     avgt   20      0.024 ±  0.001  us/op
+n.f.s.streams.GzipStreams.write     avgt  200     25.654 ±  0.410  us/op
+n.f.s.streams.Streams.read          avgt  200      8.000 ±  0.066  us/op
+n.f.s.streams.Streams.sizer         avgt   20      0.026 ±  0.001  us/op
+n.f.s.streams.Streams.write         avgt  200      5.016 ±  0.055  us/op
+n.f.s.streams.XzStreams.read        avgt  200   1063.143 ±  6.454  us/op
+n.f.s.streams.XzStreams.sizer       avgt   20      0.023 ±  0.001  us/op
+n.f.s.streams.XzStreams.write       avgt  200  11697.885 ± 70.539  us/op
+n.f.s.thrift.BinaryThrift.read      avgt  200      1.168 ±  0.010  us/op
+n.f.s.thrift.BinaryThrift.sizer     avgt   20      0.025 ±  0.001  us/op
+n.f.s.thrift.BinaryThrift.write     avgt  200      2.023 ±  0.020  us/op
+n.f.s.thrift.CompactThrift.read     avgt  200      1.183 ±  0.010  us/op
+n.f.s.thrift.CompactThrift.sizer    avgt   20      0.023 ±  0.001  us/op
+n.f.s.thrift.CompactThrift.write    avgt  200      1.899 ±  0.018  us/op
+n.f.s.thrift.JsonThrift.read        avgt  200     11.191 ±  0.097  us/op
+n.f.s.thrift.JsonThrift.sizer       avgt   20      0.022 ±  0.001  us/op
+n.f.s.thrift.JsonThrift.write       avgt  200     10.838 ±  0.079  us/op
+n.f.s.transit.BinaryTransit.read    avgt  200     22.060 ±  0.144  us/op
+n.f.s.transit.BinaryTransit.sizer   avgt   20      0.023 ±  0.001  us/op
+n.f.s.transit.BinaryTransit.write   avgt  200     15.558 ±  0.122  us/op
+n.f.s.transit.JsonTransit.read      avgt  200      6.960 ±  0.051  us/op
+n.f.s.transit.JsonTransit.sizer     avgt   20      0.023 ±  0.001  us/op
+n.f.s.transit.JsonTransit.write     avgt  200      9.264 ±  0.075  us/op
+n.f.s.avro.BinaryAvro.read               score:       8.80 us/op
+n.f.s.avro.BinaryAvro                    ====> 347 bytes
+n.f.s.avro.BinaryAvro.write              score:       3.28 us/op
+n.f.s.avro.DeflateJsonAvro.read          score:      35.63 us/op
+n.f.s.avro.DeflateJsonAvro               ====> 491 bytes
+n.f.s.avro.DeflateJsonAvro.write         score:      72.33 us/op
+n.f.s.avro.GzipJsonAvro.read             score:      33.31 us/op
+n.f.s.avro.GzipJsonAvro                  ====> 503 bytes
+n.f.s.avro.GzipJsonAvro.write            score:      36.40 us/op
+n.f.s.avro.JsonAvro.read                 score:      24.63 us/op
+n.f.s.avro.JsonAvro                      ====> 853 bytes
+n.f.s.avro.JsonAvro.write                score:      13.10 us/op
+n.f.s.avro.XzJsonAvro.read               score:    1076.20 us/op
+n.f.s.avro.XzJsonAvro                    ====> 576 bytes
+n.f.s.avro.XzJsonAvro.write              score:   12004.12 us/op
+n.f.s.protobuf.Protobuf.read             score:       0.67 us/op
+n.f.s.protobuf.Protobuf                  ====> 359 bytes
+n.f.s.protobuf.Protobuf.write            score:       0.38 us/op
+n.f.s.streams.DeflateStreams.read        score:      18.48 us/op
+n.f.s.streams.DeflateStreams             ====> 476 bytes
+n.f.s.streams.DeflateStreams.write       score:     134.62 us/op
+n.f.s.streams.GzipStreams.read           score:      16.93 us/op
+n.f.s.streams.GzipStreams                ====> 488 bytes
+n.f.s.streams.GzipStreams.write          score:      25.65 us/op
+n.f.s.streams.Streams.read               score:       8.00 us/op
+n.f.s.streams.Streams                    ====> 740 bytes
+n.f.s.streams.Streams.write              score:       5.02 us/op
+n.f.s.streams.XzStreams.read             score:    1063.14 us/op
+n.f.s.streams.XzStreams                  ====> 552 bytes
+n.f.s.streams.XzStreams.write            score:   11697.88 us/op
+n.f.s.thrift.BinaryThrift.read           score:       1.17 us/op
+n.f.s.thrift.BinaryThrift                ====> 449 bytes
+n.f.s.thrift.BinaryThrift.write          score:       2.02 us/op
+n.f.s.thrift.CompactThrift.read          score:       1.18 us/op
+n.f.s.thrift.CompactThrift               ====> 359 bytes
+n.f.s.thrift.CompactThrift.write         score:       1.90 us/op
+n.f.s.thrift.JsonThrift.read             score:      11.19 us/op
+n.f.s.thrift.JsonThrift                  ====> 640 bytes
+n.f.s.thrift.JsonThrift.write            score:      10.84 us/op
+n.f.s.transit.BinaryTransit.read         score:      22.06 us/op

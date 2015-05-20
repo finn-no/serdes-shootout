@@ -16,13 +16,6 @@
 
 package no.finntech.shootout;
 
-import java.io.IOException;
-import java.util.Collection;
-import java.util.Map;
-import java.util.SortedSet;
-import java.util.TreeSet;
-import java.util.concurrent.TimeUnit;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.openjdk.jmh.annotations.Mode;
@@ -34,6 +27,10 @@ import org.openjdk.jmh.runner.RunnerException;
 import org.openjdk.jmh.runner.options.OptionsBuilder;
 import org.openjdk.jmh.runner.options.VerboseMode;
 import org.openjdk.jmh.util.ClassUtils;
+
+import java.io.IOException;
+import java.util.*;
+import java.util.concurrent.TimeUnit;
 
 import static java.util.stream.Collectors.toSet;
 
@@ -50,20 +47,22 @@ public final class Main {
         Collection<RunResult> results = runner.run();
         Map<String, String> denseNames = getDenseNames(results);
         Map<String, Integer> sizes = Case.getSizes();
-        SortedSet<String> output = new TreeSet<>();
-        for (RunResult result : results) {
-            BenchmarkParams params = result.getParams();
-            String benchmark = params.getBenchmark();
-            if (benchmark.contains(".sizer")) {
-                output.add(buildBenchmarkHeader(denseNames.get(benchmark), sizes.get(benchmark)));
-            } else {
-                output.add(buildBenchmarkResult(result.getPrimaryResult(), denseNames.get(benchmark)));
-            }
-        }
-        for (String line : output) {
-            System.out.println(line);
-        }
+        results.stream()
+                .flatMap(result -> buildOutput(denseNames, sizes, result).stream())
+                .forEach(System.out::println);
         LOG.info("Run completed");
+    }
+
+    private static SortedSet<String> buildOutput(Map<String, String> denseNames, Map<String, Integer> sizes, RunResult result) {
+        SortedSet<String> output = new TreeSet<>();
+        BenchmarkParams params = result.getParams();
+        String benchmark = params.getBenchmark();
+        if (benchmark.contains(".sizer")) {
+            output.add(buildBenchmarkHeader(denseNames.get(benchmark), sizes.get(benchmark)));
+        } else {
+            output.add(buildBenchmarkResult(result.getPrimaryResult(), denseNames.get(benchmark)));
+        }
+        return output;
     }
 
     private static String buildBenchmarkResult(Result primaryResult, String denseName) {

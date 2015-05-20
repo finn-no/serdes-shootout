@@ -14,9 +14,9 @@ Most things should already be present, except:
 
 The thrift and protobuf compilers must be on your `PATH`.
 
-* Thrift: Should be version `0.9.1`, and named `thrift-0.9.1`
+* Thrift: Should be version `0.9.2`, and named `thrift-0.9.2`
     * Maven properties: `thrift.version` and `thrift.executable`
-* Protobuf: Should be version `2.5.0`, and named `protoc`
+* Protobuf: Should be version `2.6.1`, and named `protoc`
     * Maven properties: `protobuf.version` and `protobuf.executable`
 
 

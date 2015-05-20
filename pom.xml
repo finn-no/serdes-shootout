@@ -30,11 +30,11 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <version.jdk>1.8</version.jdk>
-        <version.log4j>2.0.2</version.log4j>
-        <version.jmh>1.9.1</version.jmh>
+        <version.log4j>2.3</version.log4j>
+        <version.jmh>1.9.3</version.jmh>
 
-        <version.thrift>0.9.1</version.thrift>
-        <version.protobuf>2.5.0</version.protobuf>
+        <version.thrift>0.9.2</version.thrift>
+        <version.protobuf>2.6.1</version.protobuf>
 
         <thrift.executable>thrift-${version.thrift}</thrift.executable>
         <protobuf.executable>protoc</protobuf.executable>
@@ -148,7 +148,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-resources-plugin</artifactId>
-                <version>2.6</version>
+                <version>2.7</version>
                 <configuration>
                     <encoding>${project.build.sourceEncoding}</encoding>
                 </configuration>
@@ -156,7 +156,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.1</version>
+                <version>3.3</version>
                 <inherited>true</inherited>
                 <configuration>
                     <!-- these properties must be defined by each specific project -->
@@ -168,7 +168,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-source-plugin</artifactId>
-                <version>2.2.1</version>
+                <version>2.4</version>
                 <inherited>true</inherited>
                 <executions>
                     <execution>
@@ -183,7 +183,7 @@
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>build-helper-maven-plugin</artifactId>
-                <version>1.8</version>
+                <version>1.9.1</version>
                 <inherited>true</inherited>
                 <executions>
                     <execution>
@@ -220,7 +220,7 @@
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>exec-maven-plugin</artifactId>
-                <version>1.2.1</version>
+                <version>1.4.0</version>
                 <configuration>
                     <executable>java</executable>
                     <arguments>
